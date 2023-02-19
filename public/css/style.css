@@ -1,0 +1,316 @@
+body{
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    font-family: 'Jost', sans-serif;
+    background-color: rgb(18, 18, 18);
+}
+.wrapper{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-image: url("../imgs/design/back.png");
+    background-size: cover;
+    background-attachment: fixed;
+}
+header{
+    width: 100%;
+    height: 13vmin;
+    background-color: rgba(202, 202, 202, 0.946);
+    padding: 0px 3%;
+    box-sizing: border-box;
+    box-shadow: inset 0px -40px 30px -15px rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header a{
+    color: black;
+}
+header > div{
+    color: black;
+}
+header > div h2{
+    margin: 0;
+    color: black;
+}
+.logo{
+    display: flex;
+    align-items: center;
+}
+.logo img{
+    height: 12vmin;
+}
+.logo h1{
+    font-weight: 400;
+    margin: 0;
+}
+.genres{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.genres p{
+    font-size: 4vmin;
+    cursor: pointer;
+    transition-duration: 0.2s;
+    padding: 10px 20px;
+    border-radius: 10px;
+    user-select: none;
+    margin: 0;
+}
+.genres p:hover, .sign p:hover{
+    background-color: rgba(245, 245, 245, 0.429);
+}
+.genres div{
+    position: absolute;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    z-index: 1;
+    margin-top: 8vmin;
+    width: 150%;
+    display: flex;
+    flex-direction: column;
+}
+.genres div a{
+    text-align: center;
+    margin: 0;
+    font-size: 3vmin;
+    font-weight: 300;
+    color: black;
+    width: 100%;
+    transition-duration: 0.2s
+}
+.genres div a:hover, .sign div p:hover{
+    background-color: rgba(0, 0, 0, 0.073);
+}
+.search{
+    width: max-content;
+}
+.search a{
+    font-size: 4vmin;
+    color: black !important;
+}
+.sign{
+    display: flex;
+    justify-content: end;
+    position: relative;
+}
+.sign > p{
+    font-size: 3vmin;
+    transition-duration: 0.2s;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+}
+.sign div{
+    position: absolute;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    z-index: 1;
+    margin-top: 10vmin;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.sign div p{
+    text-align: center;
+    margin: 0;
+    font-size: 2.5vmin;
+    font-weight: 300;
+    color: black;
+    width: 100%;
+    transition-duration: 0.2s;
+    cursor: pointer;
+}
+main{
+    width: 100%;
+    flex-grow: 1;
+    box-shadow: inset 0px 0px 70px 20px black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    color: whitesmoke;
+}
+.conteiner .header a{
+    font-size: 3vmin;
+}
+.conteiner h1{
+    margin: 0;
+}
+.conteiner h2{
+    margin: 0;
+}
+.header{
+    display: flex;
+    align-items: start;
+}
+#search_albums{
+    width: 100%;
+}
+.modal_window{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.636);
+    cursor: pointer;
+}
+.modal_window > div{
+    width: 30%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 3%;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 20px;
+    border: 5px solid black;
+    cursor: auto;
+}
+.modal_window > div h1{
+    margin: 0;
+}
+.modal_window > div input{
+    width: 100%;
+    height: 5vmin;
+    border: none;
+    outline: none;
+    border-bottom: 3px solid black;
+    font-size: 3vmin;
+    margin-bottom: 10px;
+}
+.modal_window > div > div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.modal_window .error_text{
+    margin: 0;
+}
+.modal_window > div button{
+    font-size: 3vmin;
+    color: black;
+    background-color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 700;
+    border: 3px solid black;
+    transition-duration: 0.5s;
+}
+.modal_window > div button:hover{
+    background-color: black;
+    color: whitesmoke;
+}
+.user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 15%;
+}
+.user .icon{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.user .icon p{
+    margin: 0;
+}
+.user .icon img{
+    width: 8vmin;
+    cursor: pointer;
+}
+.user ul{
+    position: absolute;
+    width: max-content;
+    background-color: whitesmoke;
+    border: 3px solid black;
+    list-style: none;
+    padding: 0;
+    border-radius: 10px;
+    margin-top: 12vmin;
+}
+.user ul li{
+    display: flex;
+    transition-duration: 0.2s;
+    flex-wrap: wrap;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.user ul li:hover{
+    background-color: rgba(0, 0, 0, 0.167);
+}
+.user ul a, .user ul p{
+    margin: 0;
+    width: 100%;
+}
+footer{
+    width: 100%;
+    min-height: 10vmin;
+    background-color: rgba(202, 202, 202, 0.946);
+    box-shadow: inset 0px 40px 30px -10px rgba(0,0,0,0.75);
+    color: black;
+    display: flex;
+    justify-content: space-around;
+    align-items: end;
+    padding: 0px 3%;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+}
+footer form{
+    display: flex;
+    width: 55%;
+}
+footer form > div{
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    align-items: baseline;
+}
+footer form div:first-child{
+    flex-grow: 1;
+}
+footer form div:last-child input, #search_albums input{
+    width: 100%;
+    height: 3vmin;
+    margin-bottom: 5px;
+    font-size: 2vmin;
+    border: none;
+    outline: none;
+    background: none;
+    border-bottom: 3px solid black;
+    padding-bottom: 0;
+    color: black
+}
+footer form div:last-child input::placeholder{
+    color: black;
+}
+footer form div:last-child button{
+    width: min-content;
+    font-size: 2vmin;
+    padding: 5px 10px;
+    background-color: black;
+    color: whitesmoke;
+}
+footer div h2,footer div p, footer form h2, footer form p{
+    margin: 0;
+}

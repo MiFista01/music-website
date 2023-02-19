@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <div class="conteiner column">
+                    <div class="header between">
+                        <a href="all" class="big_ft"><h2>HITS <%= year %></h2></a>
+                        <a href="all" class="bold middle_ft">Show all</a>
+                    </div>
+                    <div class="row">
+                        <% hits.forEach(element => { %>
+                            <div>
+                                <a href="track/<%=element.track.id%>"><img src="<%= element.img %>" alt=""></a>
+                                <h3 class="small_ft"><%=  element.performer %></h3>
+                                <p class="small_ft"><%= element.track.title %></p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                <div class="conteiner column">
+                    <div class="header between">
+                        <a href="playlists" class="big_ft"><h2>MUZLO PlayList</h2></a>
+                        <a href="playlists" class="bold middle_ft">Show all</a>
+                    </div>
+                    <div class="row">
+                        <% playlists.forEach(element => { %>
+                            <div>
+                                <a href="playlist/<%=element.id%>"><img src="<%= element.img %>" alt=""></a>
+                                <h3 class="small_ft"><%=  element.title %></h3>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

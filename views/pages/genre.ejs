@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <div class="conteiner column">
+                    <div class="header">
+                        <h1><%= genre %></h1>
+                    </div>
+                    <div class="row">
+                        <% if (albums.length == 0) { %>
+                            <h1>Sorry, but there are no albums with this genre yet</h1>
+                        <% } %>
+                       <% albums.forEach(element => { %>
+                            <div>
+                                <a href="/album/<%= element.id %>"><img src="../<%= element.img %>" alt=""></a>
+                                <h3 class="small_ft"><%= element.performerName %></h3>
+                                <p class="small_ft"> <%= element.title %></p>
+                            </div>
+                       <% }) %>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+            
+        </div>
+    </body>
+</html>

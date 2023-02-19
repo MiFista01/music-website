@@ -1,0 +1,78 @@
+a{
+    text-decoration: none;
+    color: whitesmoke;
+}
+.error{
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../imgs/design/error.gif);
+    background-size: cover;
+    background-position: center;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.row{
+    display: flex;
+    width: 100%;
+}
+.row > div{
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 15%;
+}
+.row div a, .row div a img{
+    width: 100%;
+}
+.row h3, .row p{
+    margin: 0;
+    color: whitesmoke;
+}
+.row h3{
+    font-size: 2vmin;
+}
+.row p{
+    font-size: 1.9vmin;
+}
+.between{
+    justify-content: space-between;
+}
+.bold{
+    font-weight: bold;
+}
+.conteiner{
+    width: 85%;
+}
+.smalles_ft{
+    font-size: 1.5vmin !important;
+}
+.small_ft{
+    font-size: 2vmin !important;
+}
+.middle_ft{
+    font-size: 2.5vmin !important;
+}
+.large_ft{
+    font-size: 3vmin;
+}.larger_ft{
+    font-size: 3.5vmin;
+}
+.big_ft{
+    font-size: 4vmin !important;
+}
+.biggest_ft{
+    font-size: 6vmin !important;
+}
+.scroll_off{
+    overflow: hidden;
+}
+ ::-webkit-scrollbar{
+    display: none;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <form>
+                    <% if (!admin) { %>
+                        <input type="text" name="nick">
+                    <% } %>
+                    <input type="text" name="password">
+                    <button>Change</button>
+                </form>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

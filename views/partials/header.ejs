@@ -1,0 +1,77 @@
+<div class="logo">
+    <a href="/"><img src="../imgs/design/logo.png" alt=""></a>
+    <a href="/"><h1 class="biggest_ft">MUZLO</h1></a>
+</div>
+<div class="genres">
+    <p class="list big_ft">GENRES</p>
+    <div>
+        <% genres.forEach(element => { %>
+         <a href="/genre/<%= element.title %>" class="larger_ft"><%= element.title %></a>
+        <% }) %>
+    </div>
+</div>
+<div class="search">
+    <% if (search == "page") { %>
+        <a href="/search" class="big_ft">SEARCH</a>
+    <% } %>
+    <% if (search == "no page") { %>
+        <form id="search_albums">
+            <input type="text" placeholder="Album search by artist" autocomplete="off">
+            <datalist>
+                
+            </datalist>
+        </form>
+    <% } %>
+</div>
+<% if (!author) { %>
+    <div class="sign">
+        <p class="list large_ft">SIGN</p>
+        <div>
+            <p class="middle_ft" id="log">Log in</p>
+            
+            <p class="middle_ft" id="reg">Regisrer</p>
+        </div>
+    </div>
+
+    <form class="modal_window log" id="login" method="post">
+        <div>
+            <h1 class="big_ft">Authorization</h1>
+            <input type="text" name="nick" placeholder="User name">
+            <input type="password" name="password" placeholder="Password" autocomplete="off">
+            <div>
+                <p class="middle_ft error_text"></p>
+                <button>Log in</button>
+            </div>
+        </div>
+    </form>
+    
+    <form class="modal_window reg" id="registr" method="post">
+        <div>
+            <h1 class="big_ft">Registration</h1>
+            <input type="text" name="nick" placeholder="User name">
+            <input type="text" name="password" placeholder="Password" autocomplete="off">
+            <div>
+                <p class="middle_ft error_text"></p>
+                <button>Register</button>
+            </div>
+        </div>
+    </form>
+<% }else {%> 
+    <div class="user">
+        <div class="icon">
+            <p class="small_ft"> <%= user.nick %></p>
+            <img src="../../imgs/design/user.png" alt="">
+        </div>
+        <ul>
+            <li><a href="/profile/<%= user.nick %>" class="middle_ft">Profile</a></li>
+            <li><a href="/favoirites" class="middle_ft">Favoirites</a></li>
+            <% if (admin) { %>
+                <li><a href="/performer" class="middle_ft">Manager performers</a></li>
+                <li><a href="/albums" class="middle_ft">Manager albums</a></li>
+                <li><a href="/track" class="middle_ft">Manager tracks</a></li>
+            <% } %>
+            <li><p id="logout">Log out</p></li>
+        </ul>
+    </div>
+<%}%>
+ 
