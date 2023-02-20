@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Фев 20 2023 г., 10:16
--- Версия сервера: 10.1.33-MariaDB
--- Версия PHP: 7.2.6
+-- Время создания: Фев 20 2023 г., 14:11
+-- Версия сервера: 10.4.27-MariaDB
+-- Версия PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -35,7 +34,7 @@ CREATE TABLE `albums` (
   `year` int(11) NOT NULL,
   `count_clicks` int(11) DEFAULT NULL,
   `img` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `albums`
@@ -57,7 +56,7 @@ CREATE TABLE `favourites` (
   `id` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
   `trackid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `favourites`
@@ -76,7 +75,7 @@ INSERT INTO `favourites` (`id`, `userid`, `trackid`) VALUES
 CREATE TABLE `genres` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `genres`
@@ -95,9 +94,9 @@ CREATE TABLE `performers` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `year` int(11) NOT NULL,
-  `des` text,
+  `des` text DEFAULT NULL,
   `who` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `performers`
@@ -119,7 +118,14 @@ CREATE TABLE `playlists` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `img` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Дамп данных таблицы `playlists`
+--
+
+INSERT INTO `playlists` (`id`, `title`, `img`) VALUES
+(1, 'ROCK', 'imgs/playlists/rock.jpg');
 
 -- --------------------------------------------------------
 
@@ -133,7 +139,7 @@ CREATE TABLE `tracks` (
   `link` varchar(255) NOT NULL,
   `albumId` int(11) NOT NULL,
   `count` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `tracks`
@@ -155,7 +161,7 @@ CREATE TABLE `track_genres` (
   `id` int(11) NOT NULL,
   `trackId` int(11) NOT NULL,
   `genreId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `track_genres`
@@ -177,7 +183,17 @@ CREATE TABLE `track_playlists` (
   `id` int(11) NOT NULL,
   `trackId` int(11) NOT NULL,
   `playlistId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Дамп данных таблицы `track_playlists`
+--
+
+INSERT INTO `track_playlists` (`id`, `trackId`, `playlistId`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1),
+(4, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -190,7 +206,7 @@ CREATE TABLE `users` (
   `nick` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `salt` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `users`
@@ -209,7 +225,7 @@ INSERT INTO `users` (`id`, `nick`, `password`, `salt`) VALUES
 CREATE TABLE `whos` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Дамп данных таблицы `whos`
@@ -324,7 +340,7 @@ ALTER TABLE `performers`
 -- AUTO_INCREMENT для таблицы `playlists`
 --
 ALTER TABLE `playlists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT для таблицы `tracks`
@@ -342,7 +358,7 @@ ALTER TABLE `track_genres`
 -- AUTO_INCREMENT для таблицы `track_playlists`
 --
 ALTER TABLE `track_playlists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
