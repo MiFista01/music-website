@@ -17,7 +17,7 @@
                     <div class="row">
                         <% hits.forEach(element => { %>
                             <div>
-                                <a href="track/<%=element.track.id%>"><img src="<%= element.img %>" alt=""></a>
+                                <a href="album/<%=element.track.albumId%>"><img src="<%= element.img %>" alt=""></a>
                                 <h3 class="small_ft"><%=  element.performer %></h3>
                                 <p class="small_ft"><%= element.track.title %></p>
                             </div>

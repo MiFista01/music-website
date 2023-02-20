@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <div class="conteiner column">
+                    <div class="header">
+                        <h1>Favorites</h1>
+                    </div>
+                    <div class="row">
+                        <% if (favorites_tracks.length == 0) { %>
+                            <h1>You don't have any bookmarks</h1>
+                        <% } %>
+                       <% favorites_tracks.forEach(element => { %>
+                            <div>
+                                <a href="/album/<%= element.track.albumId %>"><img src="../<%= element.img.img %>" alt=""></a>
+                                <h3 class="small_ft"><%= element.track.title %></h3>
+                            </div>
+                       <% }) %>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

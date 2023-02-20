@@ -9,12 +9,16 @@
                 <%- include('../partials/header'); %>
             </header>
             <main>
-                <form>
+                <form id="change_profile">
+                    <h2 class="large_ft">Change profile options</h2>
                     <% if (!admin) { %>
-                        <input type="text" name="nick">
+                        <input type="text" name="nick" value="<%= user.nick %>" placeholder="Change nick">
                     <% } %>
-                    <input type="text" name="password">
-                    <button>Change</button>
+                    <input type="text" name="password" minlength="5" placeholder="Change password">
+                    <div>
+                        <p class="small_ft error_text"></p>
+                        <button class="small_ft">Change</button>
+                    </div>
                 </form>
             </main>
             <footer>

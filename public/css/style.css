@@ -261,6 +261,46 @@ main{
     margin: 0;
     width: 100%;
 }
+#change_profile{
+    width: 30%;
+    height:min-content;
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 10px;
+    border: 3px solid black;
+    color: black;
+
+}
+#change_profile h2{
+    margin: 0;
+}
+#change_profile input{
+    height: 3vmin;
+    font-size: 2vmin;
+    margin-bottom: 10px;
+}
+#change_profile p{
+    margin: 0;
+}
+#change_profile div{
+    display: flex;
+    justify-content: space-between;
+}
+#change_profile button{
+    background-color: whitesmoke;
+    border: 3px solid black;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 700;
+    transition-duration: 0.5s;
+    cursor: pointer;
+}
+#change_profile button:hover{
+    background-color: black;
+    color: white;
+}
 footer{
     width: 100%;
     min-height: 10vmin;

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <div class="conteiner column">
+                    <div class="header">
+                        <div class="row">
+                            <img src="<%= album.img %>" alt="">
+                            <h1><%= album.title %></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <% if (tracks.length == 0) { %>
+                            <h1>Album empty</h1>
+                        <% } %>
+                        <ul>
+                            <% tracks.forEach(element => { %>
+                                <li>
+                                    <audio src="<%= element.link %>"></audio>
+                                </li>
+                           <% }) %>
+                        </ul>
+                       
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

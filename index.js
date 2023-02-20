@@ -15,7 +15,7 @@ const Who = require("./models/Who")
 let bcrypt = require("bcrypt")
 var express = require("express"); 
 var app = express();
-const uuid = require('uuid').v4
+const uuid = require('uuid').v4  
 
 
 
@@ -55,7 +55,7 @@ User.findOne({where:{nick:"admin"}}).then(async (result) => {
     
 });
 
-app.get('/', async function(req, res){
+app.get('/', async function(req, res){ 
     let hits = []
     let tracks = await Track.findAll({orders:"DESC", limit:10})
     for (i of tracks){
@@ -87,7 +87,7 @@ app.get('/genre/:title', async function(req, res){
     let track_genre = await TrackGenre.findAll({where:{genreId:genre.id}})
     let albumsIds = []
     for (let i of track_genre){
-        let track =await Track.findOne({where:{id:i.trackId}})
+        let track = await Track.findOne({where:{id:i.trackId}})
         albumsIds.push(track.albumId)
     }
     let albums = await Album.findAll({where:{id:albumsIds}})
@@ -124,8 +124,54 @@ app.get('/profile/:nick', async function(req, res){
         }else{
             res.redirect("/")
         }
+    }else{
+        res.redirect("/")
     }
     
+})
+app.get('/:nick/favorites', async function(req, res){
+    let user
+    let admin
+    let genres = await Genre.findAll()
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+        if (req.params.nick == user.nick){
+            let favorites_tracks = []
+            let favorites = await Favourites.findAll({where:{userid:req.session.userId}, attributes:["id"]})
+            let favoritesIds = []
+            for(let i of favorites){
+                favoritesIds.push(i.id)
+            }
+            let tracks = await Track.findAll({where:{id:favoritesIds}})
+            for(let i of tracks){
+                let music = {}
+                music.track = i
+                music.img = await Album.findOne({where:{id:i.albumId}})
+                favorites_tracks.push(music)
+            }
+            res.render('pages/favorites',{author: req.session.author, genres, user, admin, favorites_tracks, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+    
+})
+app.get('/album/:id', async function(req, res){
+    let tracks = await Track.findAll({where:{albumId:req.params.id}})
+    let album = await Album.findOne({where:{id:req.params.id}})
+    let user
+    let admin
+    let genres = await Genre.findAll()
+    
+    res.render('pages/album',{author: req.session.author, genres, user, admin, tracks, album, search:"no page"});
 })
 app.post('/login', async function(req, res){
     let user = await User.findOne({where:{nick:req.body.nick}})
@@ -163,12 +209,37 @@ app.post('/reg', async function(req, res){
         res.send({status:0, cause:"Nickname exists or is it short"})
     }
 })
-
+app.post('/change_profile', async function(req, res){ 
+    try {
+        let user = await User.findOne({where:{id:req.session.userId}})
+        if(req.body.password.length >= 5){
+            let salt = await bcrypt.genSalt(10)
+            let password = await bcrypt.hash(req.body.password, salt)
+            user.update({password, salt})
+        }
+        if(req.body.nick != null && req.body.nick.length >= 5 && req.body.nick != user.nick){
+            user.update({nick:req.body.nick})
+        }
+        res.send({status:1})
+    } catch (error) {
+        res.send({status:0})
+    }
+    
+})
 app.get('/session/destroy', async function(req, res){
-    console.log("close")
     req.session.destroy();
 })
-app.all('*', function(req, res){
-    res.render('pages/error');
+app.all('*', async function(req, res){
+    let user
+    let admin
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+    }
+    res.render('pages/error',{admin});
 })
 app.listen(3000); 

@@ -64,7 +64,7 @@
         </div>
         <ul>
             <li><a href="/profile/<%= user.nick %>" class="middle_ft">Profile</a></li>
-            <li><a href="/favoirites" class="middle_ft">Favoirites</a></li>
+            <li><a href="/<%= user.nick %>/favorites" class="middle_ft">Favoirites</a></li>
             <% if (admin) { %>
                 <li><a href="/performer" class="middle_ft">Manager performers</a></li>
                 <li><a href="/albums" class="middle_ft">Manager albums</a></li>
