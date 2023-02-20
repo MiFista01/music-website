@@ -71,6 +71,9 @@ a{
 .scroll_off{
     overflow: hidden;
 }
+.clicked{
+    box-shadow: inset 0px 0px 5px black;
+}
  ::-webkit-scrollbar{
     display: none;
     -ms-overflow-style: none;  /* IE and Edge */

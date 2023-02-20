@@ -21,7 +21,6 @@ const uuid = require('uuid').v4
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
-const FileStore = require('session-file-store')(sessions);
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 12;
 
@@ -167,11 +166,45 @@ app.get('/:nick/favorites', async function(req, res){
 app.get('/album/:id', async function(req, res){
     let tracks = await Track.findAll({where:{albumId:req.params.id}})
     let album = await Album.findOne({where:{id:req.params.id}})
+    let performer = await Performer.findOne({where:{id:album.performerId}})
+    let genres = await Genre.findAll()
     let user
     let admin
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+    }
+    res.render('pages/album',{author: req.session.author, genres, user, admin, tracks, album,performer, search:"no page"});
+})
+app.get('/playlist/:id', async function(req, res){
+    let playlist = await PlayList.findOne({where:{id:req.params.id}})
+    let tracksIds = []
+    let tarcks_palylist = await TrackPlayList.findAll({where:{playlistId:req.params.id}})
+    for(let i of tarcks_palylist){
+        tracksIds.push(i.id)
+    }
+    let tracks = await Track.findAll({where:{id:tracksIds}})
+    for (let i of tracks){
+        let album = await Album.findOne({where:{id:i.id}})
+        let performer = await Performer.findOne({where:{id:album.performerId}})
+        i.performer = performer
+    }
     let genres = await Genre.findAll()
-    
-    res.render('pages/album',{author: req.session.author, genres, user, admin, tracks, album, search:"no page"});
+    let user
+    let admin
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+    }
+    res.render('pages/playlist',{author: req.session.author, genres,tracks, playlist, user, admin, search:"no page"});
 })
 app.post('/login', async function(req, res){
     let user = await User.findOne({where:{nick:req.body.nick}})

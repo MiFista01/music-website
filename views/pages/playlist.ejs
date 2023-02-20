@@ -12,13 +12,12 @@
                 <div class="conteiner row album_list">
                     <div class="header">
                         <div class="column">
-                            <img src="../../../<%= album.img %>" alt="" class="">
-                            <h1 class="larger_ft"><%= performer.name %></h1>
-                            <h2 class="large_ft"><%= album.title %></h2>
+                            <img src="../../../<%= playlist.img %>" alt="" class="">
+                            <h2 class="large_ft"><%= playlist.title %></h2>
                         </div>
                     </div>
                     <% if (tracks.length == 0) { %>
-                        <h1>Album empty</h1>
+                        <h1>Playlist empty</h1>
                     <% } %>
                     <ul>
                         <% tracks.forEach(element => { %>
@@ -26,6 +25,7 @@
                                 <img src="../../imgs/design/play.png" alt="" class="play_pause" status="pause">
                                 <div class="column">
                                     <p class="middle_ft"><%= element.title %></p>
+                                    <p class="small_ft"><%= element.performer %></p>
                                     <audio src="../../../<%= element.link %>" controls disablepictureinpicture controlslist="nodownload noplaybackrate" class="album_track"></audio>
                                 </div>
                             </li>

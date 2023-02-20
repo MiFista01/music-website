@@ -301,6 +301,51 @@ main{
     background-color: black;
     color: white;
 }
+.album_list .header{
+    width: 50%;
+}
+.album_list .header img{
+    width: 50%;
+}
+.album_list ul{
+    width: 30%;
+    background-color: whitesmoke;
+    list-style: none;
+    padding: 0;
+    height: min-content;
+    border: 3px solid black;
+    border-radius: 20px;
+}
+.album_list h1, .album_list h2{
+    margin: 0;
+}
+.album_list li{
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid black;
+    transition-duration: 0.2s;
+}
+.album_list li:hover{
+    box-shadow: inset 0px 0px 5px black;
+
+}
+.album_list li img{
+    width: 5vmin;
+    cursor: pointer;
+}
+.album_list p{
+    color: black;
+}
+.album_list audio{
+    width: 100%;
+}
+.album_list audio::-webkit-media-controls-panel{
+    background-color: whitesmoke;
+}
+.album_list audio::-webkit-media-controls-play-button{
+    display: none;
+}
 footer{
     width: 100%;
     min-height: 10vmin;
