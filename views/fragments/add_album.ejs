@@ -1,6 +1,6 @@
-<form id="add_row" enctype="multipart/form-data">
+<form id="add_row" method="post" enctype="multipart/form-data">
     <h2 class="large_ft">Add Album</h2>
-    <input type="text" name="title" placeholder="Name" autocomplete="off" required>
+    <input type="text" name="title" placeholder="Name" autocomplete="off" required >
     <input type="number" name="year" placeholder="Year" autocomplete="off" required>
     <input type="text" name="performer" list="performers" placeholder="Performer name" autocomplete="off" required>
     <datalist id="performers">
@@ -8,7 +8,8 @@
             <option value="<%= element.name%>"></option>
         <% }) %>
     </datalist>
-    <input type="file" name="img" id="img">
+    <input type="file" name="img" id="img" required>
+    <p class="middle_ft">Warning: filename must be unique</p>
     <button>Add album</button>
     <p class="middle_ft error_text"></p>
 </form>

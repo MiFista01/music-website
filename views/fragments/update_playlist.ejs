@@ -1,0 +1,10 @@
+<form class="update_row">
+    <h2 class="large_ft">Update Album</h2>
+    <input type="text" name="title" placeholder="Name" autocomplete="off" required value="<%= playlist.title %>">
+    <input type="text" name="id" value="<%= playlist.id %>" style="display: none;">
+    <div>
+        <div class="delete" id="<%= playlist.id %>">Delete</div>
+        <button>Update album</button>
+    </div>
+    <p class="middle_ft error_text"></p>
+</form>

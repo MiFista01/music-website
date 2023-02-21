@@ -1,14 +1,17 @@
 <form class="update_row">
-    <h2 class="large_ft">Add Album</h2>
-    <input type="text" name="title" placeholder="Name" autocomplete="off" required>
-    <input type="number" name="year" placeholder="Year" autocomplete="off" required>
-    <input type="text" name="performer" placeholder="Performer name" autocomplete="off" required>
-    <input type="file" name="img">
+    <h2 class="large_ft">Update Album</h2>
+    <input type="text" name="title" placeholder="Name" autocomplete="off" required value="<%= album.title %>">
+    <input type="number" name="year" placeholder="Year" autocomplete="off" required value="<%= album.year %>">
+    <input type="text" name="performer" placeholder="Performer name" autocomplete="off" required value="<%= album.performer %>">
+    <input type="text" name="id" value="<%= album.id %>" style="display: none;">
+    <datalist id="performers">
+        <% performers.forEach(element => { %>
+            <option value="<%= element.name%>"></option>
+        <% }) %>
+    </datalist>
     <div>
         <div class="delete" id="<%= album.id %>">Delete</div>
         <button>Update album</button>
     </div>
-    
-    <p class="middle_ft error_text"></p>
     <p class="middle_ft error_text"></p>
 </form>

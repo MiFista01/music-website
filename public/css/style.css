@@ -388,11 +388,16 @@ main{
     box-sizing: border-box;
     box-shadow: inset 0px 0px 10px 5px black;
 }
+.manager .create_form .playlist{
+    display: flex;
+    flex-direction: column;
+}
 .manager .create_form form{
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: end;
+    margin-bottom: 10px;
 }
 .manager form h2{
     width: 100%;
@@ -488,6 +493,33 @@ main{
 }
 .manager .list h3, .manager .list p{
     margin: 0;
+}
+.manager p{
+    margin: 0;
+}
+.manager .list form{
+    width: 100%;
+    padding: 10px 30px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: end;
+}
+.manager .list form input{
+    height: 3vmin;
+    font-size: 2vmin;
+    width: 100%;
+    background: none;
+    margin: 0;
+    margin-bottom: 10px;
+}
+.manager .create_form .tracks div{
+    cursor: pointer;
+    width: 30%;
+}
+.manager .create_form .tracks div:hover{
+    background-color: rgba(0, 0, 0, 0.068);
 }
 footer{
     width: 100%;

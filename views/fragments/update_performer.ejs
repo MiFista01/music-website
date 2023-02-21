@@ -3,6 +3,7 @@
     <input type="text" name="name" placeholder="Name" autocomplete="off" required value="<%= performer.name %>">
     <input type="number" name="year" placeholder="Year" autocomplete="off" required value="<%= performer.year %>">
     <textarea name="des" cols="30" rows="10" placeholder="Performer description"><%= performer.des %> </textarea>
+    <input type="text" name="id" value="<%= performer.id %>" style="display: none;">
     <div>
         <div class="delete" id="<%= performer.id %>">Delete</div>
         <button>Update performer</button>

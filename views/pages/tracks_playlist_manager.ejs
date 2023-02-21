@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <% if (admin) { %>
+                    <div class="manager">
+                        <div class="create_form">
+                            <form id="tracks_playlist">
+                                <input type="text" name="playlist" list="playlists" placeholder="Search playlist">
+                                <datalist id="playlists">
+                                    <% playlists.forEach(element => { %>
+                                        <option value="<%= element.title %>"></option>
+                                    <% }) %>
+                                </datalist>
+                                <button> Search</button>
+                            </form>
+                            <form id="update_playlist">
+                                <div class="playlist">
+                                    <input type="text" name="title" placeholder="Playlist name" readonly>
+                                    <button>Update</button>
+                                    <div class="tracks">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="list">
+                            <form id="search_tracks">
+                                <input type="text" name="name" list="tracks" placeholder="Music search by albums" autocomplete="off">
+                                <datalist id="tracks">
+                                    <% albums.forEach(element => { %>
+                                     <option value="<%= element.title %>"></option>
+                                    <% }) %>
+                                </datalist>
+                                <button>Search</button>
+                            </form>
+                           <div class="result">
+
+                           </div>
+                        </div>
+                    </div>
+                <% } %>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -10,23 +10,48 @@ const TrackPlayList = require("./models/Track_PlayList")
 const PlayList = require("./models/PlayList")
 const User = require("./models/User")
 // db.sync({alter:true})
-
+const formidable = require('formidable')
 
 let bcrypt = require("bcrypt")
 var express = require("express"); 
 var app = express();
 var fs = require('fs');
-
+const path = require('path');
 var multer = require("multer");
-var storage = multer.diskStorage({
-    destination: function(req, file, callback){
-        callback(null, './public/imgs/uploads'); // set the destination
+const img_storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      // '/files' это директория в которую будут сохранятся файлы 
+      if(req.url != "/playlist_add"){
+        cb(null, 'public/imgs/albums/'+req.body.performer.split(" ")[0].toLowerCase())
+      }
+      else{
+        cb(null, 'public/imgs/playlists')
+      }
     },
-    filename: function(req, file, callback){
-        callback(null, Date.now() + '.jpg'); // set the file name and extension
+    filename: (req, file, cb) => {
+  // Возьмем оригинальное название файла, и под этим же названием сохраним его на сервере
+      const { originalname } = file
+      cb(null, originalname)
     }
-});
-var upload = multer({storage: storage});
+})
+
+const img_upload = multer({ storage: img_storage })
+
+const music_storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        // '/files' это директория в которую будут сохранятся файлы
+        let album = await Album.findOne({where:{title:req.body.album}})
+        let performer = await Performer.findOne({where:{id:album.performerId}})
+        cb(null, 'public/music/'+performer.directory)
+    },
+    filename: (req, file, cb) => {
+  // Возьмем оригинальное название файла, и под этим же названием сохраним его на сервере
+      const { originalname } = file
+      cb(null, originalname)
+    }
+})
+
+const music_upload = multer({ storage: music_storage })
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -45,6 +70,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(cookieParser());
 const bodyParser = require('body-parser');
 const sequelize = require('./connection/database');
+const { type } = require('os');
 app.use(bodyParser.json({limit: "4000mb"}));
 app.use(bodyParser.urlencoded({limit: "4000mb", extended: true, parameterLimit:5000000}));
 // ===================settings============================
@@ -310,18 +336,19 @@ app.post('/get_form_performer', async function(req, res){
         }
     }
 })
-app.post('/performer_add', async function(req, res){
+app.post('/performer_add',img_upload.single("img") ,[] , async function(req, res){
     try {
         let dir_exist = fs.existsSync("./public/music/"+req.body.name.split(" ")[0].toLowerCase())
-        let dir_exist_imgs = fs.existsSync("./public/imgs/"+req.body.name.split(" ")[0].toLowerCase())
+        let dir_exist_imgs = fs.existsSync("./public/imgs/albums/"+req.body.name.split(" ")[0].toLowerCase())
         let data = req.body
+        console.log(req.body)
         data.directory = req.body.name.split(" ")[0].toLowerCase()
         let performer = await Performer.create(data)
         if(!dir_exist){
             fs.mkdirSync("./public/music/"+req.body.name.split(" ")[0].toLowerCase());
         }
         if(!dir_exist_imgs){
-            fs.mkdirSync("./public/imgs/"+req.body.name.split(" ")[0].toLowerCase());
+            fs.mkdirSync("./public/imgs/albums/"+req.body.name.split(" ")[0].toLowerCase());
         }
         res.send({status:1})
     } catch (error) {
@@ -330,7 +357,7 @@ app.post('/performer_add', async function(req, res){
     
 
 })
-app.post('/performer_update', async function(req, res){ 
+app.post('/performer_update',img_upload.single("img") ,[] , async function(req, res){ 
     let performer = await Performer.findOne({where:{id:req.body.id}})
     if(performer != null){
         delete req.body.id
@@ -375,7 +402,7 @@ app.post('/get_form_genre', async function(req, res){
         }
     }
 })
-app.post('/genre_add', async function(req, res){
+app.post('/genre_add',img_upload.single("img") ,[] , async function(req, res){
     try {
         let genre = await Genre.create({title:req.body.title.toUpperCase()})
         res.send({status:1})
@@ -385,7 +412,7 @@ app.post('/genre_add', async function(req, res){
     
 
 })
-app.post('/genre_update', async function(req, res){ 
+app.post('/genre_update',img_upload.single("img") ,[] , async function(req, res){ 
     let genre = await Genre.findOne({where:{id:req.body.id}})
     if(genre != null){
         genre.update({title:req.body.title.toUpperCase()})
@@ -403,11 +430,6 @@ app.post('/genre_remove', async function(req, res){
         res.send({status:0})
     }
 })
-
-
-
-
-
 app.get('/manager_albums', async function(req, res){
     let admin
     let user
@@ -432,43 +454,29 @@ app.post('/get_form_album', async function(req, res){
     }else{
         if(req.body.form == "update"){
             let album = await Album.findOne({where:{id:req.body.id}})
+            let performer = await Performer.findOne({where:{id:album.performerId}})
+            album.performer = performer.name
             res.render('fragments/update_album',{album, performers})
         }
     }
 })
-app.post('/album_add', upload.single('img'), async function(req, res){
-    // try {
-        console.log(req.body)
-        let performer = Performer.findOne({where:{name:req.body.performer}})
-
-        // if(performer != null){
-        //     var form = new formidable.IncomingForm();
-        //     form.parse(req, function (err, fields, files) {
-        //         // oldpath : temporary folder to which file is saved to
-        //         var oldpath = files.filetoupload.path;
-    
-        //         var newpath = "./imgs/albums" + files.filetoupload.name;
-        //         // copy the file to a new location
-    
-        //         fs.rename(oldpath, newpath, function (err) {
-        //             if (err) throw err;
-        //             // you may respond with another html page
-        //             res.write('File uploaded and moved!');
-        //             res.end();
-        //         });
-        //     });
-        // }
-        
-    //     res.send({status:1})
-    // } catch (error) {
-    //     res.send({status:0})
-    // }
-    
-
+app.post('/album_add',img_upload.single("img") ,[] , async function(req, res){
+    try {
+        let performer = await Performer.findOne({where:{name:req.body.performer}})
+        if(performer != null && req.file != undefined){
+            let album = await Album.create({title:req.body.title, performerId:performer.id, year:req.body.year, img:req.file.destination.replace("public/", "")+"/"+req.file.filename})
+            res.send({status:1})
+        }else{
+            res.send({status:0,text:"non-existent performer"})
+        }
+    } catch (error) {
+        res.send({status:0})
+    }
 })
-app.post('/album_update', async function(req, res){ 
+app.post('/album_update',img_upload.single("img") ,[] , async function(req, res){ 
     let album = await Album.findOne({where:{id:req.body.id}})
-    if(album != null){
+    console.log(album)
+    if(album != null){ 
         delete req.body.id
         album.update(req.body)
         res.send({status:1})
@@ -476,7 +484,7 @@ app.post('/album_update', async function(req, res){
         res.send({status:0})
     }
 })
-app.post('/genre_remove', async function(req, res){ 
+app.post('/album_remove', async function(req, res){ 
     let album = await Album.findOne({where:{id:req.body.id}})
     if(album != null){
         await album.destroy()
@@ -485,11 +493,232 @@ app.post('/genre_remove', async function(req, res){
         res.send({status:0})
     }
 })
+app.get('/manager_playlist', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            let playlists = await PlayList.findAll()
+            res.render('pages/playlist_manager',{author: req.session.author, genres, playlists, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_playlist', async function(req, res){ 
+    let tracks = await Track.findAll()
+    if(req.body.form == "add"){
+        res.render('fragments/add_playlist',{tracks})
+    }else{
+        if(req.body.form == "update"){
+            let playlist = await PlayList.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_playlist',{playlist, tracks})
+        }
+    }
+})
+app.post('/playlist_add',img_upload.single("img") ,[] , async function(req, res){
+    try {
+        if(req.file != undefined){
+            let playlist = await PlayList.create({title:req.body.title, img:req.file.destination.replace("public/", "")+"/"+req.file.filename})
+            res.send({status:1})
+        }else{
+            res.send({status:0,text:"non-existent playlist picture"})
+        }
+    } catch (error) {
+        res.send({status:0})
+    }
+})
+app.post('/playlist_update',img_upload.single("img") ,[] , async function(req, res){ 
+    let playlist = await PlayList.findOne({where:{id:req.body.id}})
+    if(playlist != null){ 
+        delete req.body.id
+        playlist.update(req.body)
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/playlist_remove', async function(req, res){ 
+    let playlist = await PlayList.findOne({where:{id:req.body.id}})
+    if(playlist != null){
+        await playlist.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.get('/manager_track', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            let tracks = await Track.findAll()
+            let albums = await Album.findAll()
+            for (let i of tracks){
+                let album =  await Album.findOne({where:{id:i.albumId}})
+                i.img = album.img
+            }
+            res.render('pages/track_manager',{author: req.session.author, genres, tracks, albums, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_track', async function(req, res){ 
+    let albums = await Album.findAll()
+    if(req.body.form == "add"){
+        res.render('fragments/add_track',{albums})
+    }else{
+        if(req.body.form == "update"){
+            let track = await Track.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_track',{track,albums})
+        }
+    }
+})
+app.post('/track_add',music_upload.single("music") ,[] , async function(req, res){
+    try {
+        let album = await Album.findOne({here:{title:req.body.album}})
+        if(req.file != undefined && album != null){
+            let track = await Track.create({title:req.body.title, link:req.file.destination.replace("public/", "")+"/"+req.file.filename, albumId:album.id})
+            res.send({status:1})
+        }else{
+            res.send({status:0,text:"non-existent music file"})
+        }
+    } catch (error) {
+        res.send({status:0})
+    }
+})
+app.post('/track_update',music_upload.single("music") ,[] , async function(req, res){ 
+    let track = await Track.findOne({where:{id:req.body.id}})
+    if(track != null){ 
+        let data = {}
+        data.title = req.body.title
+        let album = await Album.findOne({where:{title:req.body.album}})
+        data.albumId = album.id
+        track.update(data)
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/tarck_remove', async function(req, res){ 
+    let track = await Track.findOne({where:{id:req.body.id}})
+    if(track != null){
+        await track.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/search_tracks', async function(req, res){ 
+    let unq_tracks = new Set();
+    let albums = await Album.findAll({where:{title:{[Op.substring]:req.body.name}}})
+    for(let i of albums){
+        let tracks = await Track.findAll({where:{albumId:i.id}})
+        for(let j of tracks){
+            j.img = i.img
+            unq_tracks.add(j)
+        }
+    }
+    const array = Array.from(unq_tracks)
+    res.render("fragments/render_tracks_admin",{array})
+})
 
 
 
 
-
+app.get('/manager_tracks_playlist', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            let tracks = await Track.findAll()
+            let albums = await Album.findAll()
+            let playlists = await PlayList.findAll()
+            for (let i of tracks){
+                let album =  await Album.findOne({where:{id:i.albumId}})
+                i.img = album.img
+            }
+            res.render('pages/tracks_playlist_manager',{author: req.session.author, genres, tracks, albums, playlists, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_track', async function(req, res){ 
+    let albums = await Album.findAll()
+    if(req.body.form == "add"){
+        res.render('fragments/add_track',{albums})
+    }else{
+        if(req.body.form == "update"){
+            let track = await Track.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_track',{track,albums})
+        }
+    }
+})
+app.post('/track_add',music_upload.single("music") ,[] , async function(req, res){
+    try {
+        let album = await Album.findOne({here:{title:req.body.album}})
+        if(req.file != undefined && album != null){
+            let track = await Track.create({title:req.body.title, link:req.file.destination.replace("public/", "")+"/"+req.file.filename, albumId:album.id})
+            res.send({status:1})
+        }else{
+            res.send({status:0,text:"non-existent music file"})
+        }
+    } catch (error) {
+        res.send({status:0})
+    }
+})
+app.post('/track_update',music_upload.single("music") ,[] , async function(req, res){ 
+    let track = await Track.findOne({where:{id:req.body.id}})
+    if(track != null){ 
+        let data = {}
+        data.title = req.body.title
+        let album = await Album.findOne({where:{title:req.body.album}})
+        data.albumId = album.id
+        track.update(data)
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/tarck_remove', async function(req, res){ 
+    let track = await Track.findOne({where:{id:req.body.id}})
+    if(track != null){
+        await track.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/search_tracks', async function(req, res){ 
+    let unq_tracks = new Set();
+    let albums = await Album.findAll({where:{title:{[Op.substring]:req.body.name}}})
+    for(let i of albums){
+        let tracks = await Track.findAll({where:{albumId:i.id}})
+        for(let j of tracks){
+            j.img = i.img
+            unq_tracks.add(j)
+        }
+    }
+    const array = Array.from(unq_tracks)
+    res.render("fragments/render_tracks_admin",{array})
+})
 
 
 
