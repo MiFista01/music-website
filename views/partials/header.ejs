@@ -66,9 +66,11 @@
             <li><a href="/profile/<%= user.nick %>" class="middle_ft">Profile</a></li>
             <li><a href="/<%= user.nick %>/favorites" class="middle_ft">Favoirites</a></li>
             <% if (admin) { %>
-                <li><a href="/performer" class="middle_ft">Manager performers</a></li>
-                <li><a href="/albums" class="middle_ft">Manager albums</a></li>
-                <li><a href="/track" class="middle_ft">Manager tracks</a></li>
+                <li><a href="/manager_performer" class="middle_ft">Manager performers</a></li>
+                <li><a href="/manager_genres" class="middle_ft">Manager genres</a></li>
+                <li><a href="/manager_albums" class="middle_ft">Manager albums</a></li>
+                <li><a href="/manager_playlist" class="middle_ft">Manager playlist</a></li>
+                <li><a href="/manager_track" class="middle_ft">Manager tracks</a></li>
             <% } %>
             <li><p id="logout">Log out</p></li>
         </ul>

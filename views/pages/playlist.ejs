@@ -22,7 +22,16 @@
                     <ul>
                         <% tracks.forEach(element => { %>
                             <li>
-                                <img src="../../imgs/design/play.png" alt="" class="play_pause" status="pause">
+                                <% if (author) { %>
+                                    <div class="fav <% if (element.fav == "on") { %>gold<% } %>" 
+                                       fav="<%= element.fav %>" id="<%= element.id %>">
+                                           
+                                       </div>
+                                <% } %>
+                                <div class="btn_payer">
+                                    <img src="../../imgs/design/play.png" alt="" class="play_pause" status="pause">
+                                </div>
+                               
                                 <div class="column">
                                     <p class="middle_ft"><%= element.title %></p>
                                     <p class="small_ft"><%= element.performer %></p>

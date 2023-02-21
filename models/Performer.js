@@ -19,13 +19,9 @@ const Performer = db.define('performers', {
     des: {
         type: Sequelize.TEXT
     },
-    who:{//group or one singer
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references:{
-            model:"whos",
-            key:"id"
-        }
+    directory: {
+        type: Sequelize.TEXT,
+        allowNull: false
     }
 }, {
     timestamps: false

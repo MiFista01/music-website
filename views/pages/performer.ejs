@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <% if (admin) { %>
+                    <div class="manager">
+                        <div class="create_form">
+
+                        </div>
+                        <div class="list">
+                            <div class="list_obj" id="add" activate="off" form="performer">
+                                <p class="large_ft">Add performer</p>
+                            </div>
+                            <% performers.forEach(element => { %>
+                                <div class="list_obj update" id="<%= element.id %>" activate="off" form="performer">
+                                    <p class="middle_ft"><%= element.name %></p>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>

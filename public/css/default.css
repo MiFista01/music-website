@@ -74,6 +74,9 @@ a{
 .clicked{
     box-shadow: inset 0px 0px 5px black;
 }
+.gold{
+    background-color: gold !important;
+}
  ::-webkit-scrollbar{
     display: none;
     -ms-overflow-style: none;  /* IE and Edge */

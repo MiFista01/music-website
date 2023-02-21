@@ -1,0 +1,12 @@
+<form class="update_row">
+    <h2 class="large_ft">Update performer</h2>
+    <input type="text" name="name" placeholder="Name" autocomplete="off" required value="<%= performer.name %>">
+    <input type="number" name="year" placeholder="Year" autocomplete="off" required value="<%= performer.year %>">
+    <textarea name="des" cols="30" rows="10" placeholder="Performer description"><%= performer.des %> </textarea>
+    <div>
+        <div class="delete" id="<%= performer.id %>">Delete</div>
+        <button>Update performer</button>
+    </div>
+    
+    <p class="middle_ft error_text"></p>
+</form>

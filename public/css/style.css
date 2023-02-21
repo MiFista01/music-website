@@ -304,8 +304,20 @@ main{
 .album_list .header{
     width: 50%;
 }
+.album_list .header p{
+    color: white;
+}
 .album_list .header img{
     width: 50%;
+}
+.album_list .fav{
+    clip-path: polygon(50% 5%, 61% 40%, 98% 40%, 68% 62%, 79% 96%, 50% 75%, 21% 96%, 32% 62%, 2% 40%, 39% 40%);
+    width: 5vmin;
+    height: 5vmin;
+    background-color: gray;
+    position: absolute;
+    transition-duration: 0.2s;
+    cursor: pointer;
 }
 .album_list ul{
     width: 30%;
@@ -320,9 +332,11 @@ main{
     margin: 0;
 }
 .album_list li{
+    position: relative;
     display: flex;
-    align-items: center;
-    padding: 10px 20px;
+    justify-content: end;
+    align-items: stretch;
+    padding: 5px 20px;
     border: 1px solid black;
     transition-duration: 0.2s;
 }
@@ -330,21 +344,150 @@ main{
     box-shadow: inset 0px 0px 5px black;
 
 }
+.album_list .btn_payer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}
 .album_list li img{
-    width: 5vmin;
+    width: 7vmin;
     cursor: pointer;
+    margin-right: 5px;
+}
+.album_list li .column{
+    flex-grow: 1;
 }
 .album_list p{
     color: black;
 }
 .album_list audio{
     width: 100%;
+    margin: 1vmin;
 }
 .album_list audio::-webkit-media-controls-panel{
     background-color: whitesmoke;
 }
 .album_list audio::-webkit-media-controls-play-button{
     display: none;
+}
+.manager{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    max-height: 70vh;
+    color: black;
+}
+.manager .create_form{
+    width: 50%;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 10px 5px black;
+}
+.manager .create_form form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.manager form h2{
+    width: 100%;
+}
+.manager form input{
+    width: 100%;
+    height: 3vmin;
+    font-size: 2vmin;
+    margin: 10px;
+    border: none;
+    outline: none;
+    border-bottom: 3px solid black;
+    margin: 0;
+    margin-bottom: 20px;
+}
+.manager form > div{
+    display: flex;
+    width: 100%;
+}
+.manager form > div >div{
+    display: flex;
+    margin-right: 2vmin;
+}
+.manager form > div label{
+    color: black;
+}
+.manager form textarea{
+    width: 100%;
+    height: 18vmin;
+    font-size: 2vmin;
+    margin: 10px;
+    border-radius: 10px;
+    resize: none;
+    margin: 0;
+    margin-bottom: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.manager .delete{
+    width: max-content;
+    font-size: 2vmin;
+    padding: 5px 10px;
+    background-color: white;
+    color: black;
+    transition-duration: 0.2s;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    border: 1px solid black;
+}.manager .delete:hover{
+    background-color: red;
+    color: white;
+}
+.manager form button{
+    width: max-content;
+    font-size: 2vmin;
+    padding: 5px 10px;
+    background-color: white;
+    color: black;
+    transition-duration: 0.2s;
+    border-radius: 5px;
+    border: 3px solid black;
+    cursor: pointer;
+}
+.manager form button:hover{
+    background-color: black;
+    color: white;
+}
+.manager .list{
+    width: 50%;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: white;
+    border: 3px solid black;
+    color: black;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 10px 5px black;
+}
+.manager .list_obj{
+    padding: 10px 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid black;
+    transition-duration: 0.2s;
+    display: flex;
+    align-items: center;
+}
+.manager .list_obj img{
+    width: 25%;
+}
+.manager .list_obj:hover{
+    box-shadow: inset 0px 0px 5px black;
+}
+.manager .list h3, .manager .list p{
+    margin: 0;
 }
 footer{
     width: 100%;

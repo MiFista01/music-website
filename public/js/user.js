@@ -53,4 +53,39 @@ $(document).ready(function () {
             });
         }
     });
+    $(".fav").click(function (e) { 
+        e.preventDefault();
+        let btn = this
+        if($(btn).attr("fav") == "off"){
+            $.ajax({
+                type: "post",
+                url: "/add_fav",
+                data: {id:$(btn).attr("id")},
+                dataType: "json",
+                success: function (response) {
+                    if (response.status == 1){
+                        $(btn).toggleClass("gold");
+                    }
+                    
+                }
+            });
+            $(btn).attr("fav","on")
+            return
+        }
+        if($(btn).attr("fav") == "on"){
+            $.ajax({
+                type: "post",
+                url: "/remove_fav",
+                data: {id:$(btn).attr("id")},
+                dataType: "json",
+                success: function (response) {
+                    if (response.status == 1){
+                        $(btn).toggleClass("gold");
+                    }
+                    
+                }
+            });
+            $(btn).attr("fav","on")
+        }
+    });
 });

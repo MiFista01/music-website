@@ -13,8 +13,10 @@
                     <div class="header">
                         <div class="column">
                             <img src="../../../<%= album.img %>" alt="" class="">
-                            <h1 class="larger_ft"><%= performer.name %></h1>
-                            <h2 class="large_ft"><%= album.title %></h2>
+                            <h1 class="larger_ft">Group: <%= performer.name %></h1>
+                            <h2 class="large_ft">Album: <%= album.title %></h2>
+                            <p class="middle_ft">Year of appearance:<%= performer.year %></p>
+                            <p class="middle_ft">Description: <%= performer.des %></p>
                         </div>
                     </div>
                     <% if (tracks.length == 0) { %>
@@ -23,7 +25,15 @@
                     <ul>
                         <% tracks.forEach(element => { %>
                             <li>
-                                <img src="../../imgs/design/play.png" alt="" class="play_pause" status="pause">
+                                <% if (author) { %>
+                                    <div class="fav <% if (element.fav == "on") { %>gold<% } %>" 
+                                       fav="<%= element.fav %>" id="<%= element.id %>">
+                                           
+                                       </div>
+                                <% } %>
+                                <div class="btn_payer">
+                                    <img src="../../imgs/design/play.png" alt="" class="play_pause" status="pause">
+                                </div>
                                 <div class="column">
                                     <p class="middle_ft"><%= element.title %></p>
                                     <audio src="../../../<%= element.link %>" controls disablepictureinpicture controlslist="nodownload noplaybackrate" class="album_track"></audio>

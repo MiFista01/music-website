@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Фев 20 2023 г., 14:11
--- Версия сервера: 10.4.27-MariaDB
--- Версия PHP: 8.2.0
+-- Время создания: Фев 21 2023 г., 03:20
+-- Версия сервера: 10.4.25-MariaDB
+-- Версия PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,7 +34,7 @@ CREATE TABLE `albums` (
   `year` int(11) NOT NULL,
   `count_clicks` int(11) DEFAULT NULL,
   `img` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `albums`
@@ -56,15 +56,17 @@ CREATE TABLE `favourites` (
   `id` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
   `trackid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `favourites`
 --
 
 INSERT INTO `favourites` (`id`, `userid`, `trackid`) VALUES
-(1, 1, 3),
-(2, 1, 4);
+(1, 2, 1),
+(2, 2, 4),
+(3, 2, 2),
+(4, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -75,14 +77,15 @@ INSERT INTO `favourites` (`id`, `userid`, `trackid`) VALUES
 CREATE TABLE `genres` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `genres`
 --
 
 INSERT INTO `genres` (`id`, `title`) VALUES
-(1, 'ROCK');
+(1, 'ROCKSSS'),
+(2, 'ELECTRONIC');
 
 -- --------------------------------------------------------
 
@@ -95,18 +98,18 @@ CREATE TABLE `performers` (
   `name` varchar(255) NOT NULL,
   `year` int(11) NOT NULL,
   `des` text DEFAULT NULL,
-  `who` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `directory` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `performers`
 --
 
-INSERT INTO `performers` (`id`, `name`, `year`, `des`, `who`) VALUES
-(1, 'Ashes', 2012, 'jh gsafdjkhg df sajh gfd sahj gfdsa hgfds ahg dfsahjg k fdashgj  fdsahgj fdsa kghj ', 1),
-(2, 'Cult', 2017, ';oj a slk;j f aslk  afeslkj af selkj fdsa lk jfdsa lkj fdsa lkj fdslkklj fdsa lk;  gfl kj;fsg alkj fg', 1),
-(3, 'Raizer', 2005, ' onipq w4rpo qf ap oiewq poi  eq[poi erw[po frqgapoij fe ihufaeihu fwqg pjo ega o; ijoga ', 1),
-(4, 'Starset', 2011, '[poad s[p da [op fdsa pok  lkjfds lij fds  lifsdfoij dfsaiou fd sahoi fd safdsa oiha uh fdsa    ojfis', 1);
+INSERT INTO `performers` (`id`, `name`, `year`, `des`, `directory`) VALUES
+(1, 'Ashes', 2012, 'Ash are a Northern Irish rock band formed in Downpatrick in 1992 by vocalist and guitarist Tim Wheeler, bassist Mark Hamilton and drummer Rick McMurray. As a three-piece, they released mini-album Trailer in 1994 and full-length album 1977 in 1996. This 1996 release was named by NME as one of the 500 greatest albums of all time.[8] After the success of their full debut the band recruited Charlotte Hatherley as a guitarist and vocalist, releasing their second record Nu-Clear Sounds in 1998. After narrowly avoiding bankruptcy, the band released Free All Angels in 2001 and a string of successful singles.', 'ashes'),
+(2, 'Cult', 2012, 'Cult to Follow is the new project of former The Union Underground singer Bryan Scott. The band has toured with Three Days Grace, Flyleaf, Theory Of A Deadman, The Exies, Sick Puppies, just to name of a few. They have a album slated for release in March of 2012!!', 'cult'),
+(3, 'Raizer', 2005, ' onipq w4rpo qf ap oiewq poi  eq[poi erw[po frqgapoij fe ihufaeihu fwqg pjo ega o; ijoga ', 'raizer'),
+(4, 'Starset', 2011, '[poad s[p da [op fdsa pok  lkjfds lij fds  lifsdfoij dfsaiou fd sahoi fd safdsa oiha uh fdsa    ojfis', 'starset');
 
 -- --------------------------------------------------------
 
@@ -118,7 +121,7 @@ CREATE TABLE `playlists` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `img` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `playlists`
@@ -139,7 +142,7 @@ CREATE TABLE `tracks` (
   `link` varchar(255) NOT NULL,
   `albumId` int(11) NOT NULL,
   `count` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `tracks`
@@ -161,7 +164,7 @@ CREATE TABLE `track_genres` (
   `id` int(11) NOT NULL,
   `trackId` int(11) NOT NULL,
   `genreId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `track_genres`
@@ -183,7 +186,7 @@ CREATE TABLE `track_playlists` (
   `id` int(11) NOT NULL,
   `trackId` int(11) NOT NULL,
   `playlistId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `track_playlists`
@@ -206,7 +209,7 @@ CREATE TABLE `users` (
   `nick` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `salt` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `users`
@@ -215,25 +218,6 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `nick`, `password`, `salt`) VALUES
 (1, 'admin', '$2b$10$XV21URkha1FSBkyTQ0gweusF6e4pbq/T3LmjzQtOu5vYrlFU.60jy', '$2b$10$XV21URkha1FSBkyTQ0gweu'),
 (2, 'mifista', '$2b$10$ixOGLnWac38QJrJTmOYFe.KK8vIRhOMECHMI.VxbMRv7RJ6g9qxTy', '$2b$10$ixOGLnWac38QJrJTmOYFe.');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `whos`
---
-
-CREATE TABLE `whos` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Дамп данных таблицы `whos`
---
-
-INSERT INTO `whos` (`id`, `name`) VALUES
-(1, 'Band'),
-(2, 'Alone');
 
 --
 -- Индексы сохранённых таблиц
@@ -264,8 +248,7 @@ ALTER TABLE `genres`
 -- Индексы таблицы `performers`
 --
 ALTER TABLE `performers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `who` (`who`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `playlists`
@@ -303,12 +286,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `whos`
---
-ALTER TABLE `whos`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
@@ -322,19 +299,19 @@ ALTER TABLE `albums`
 -- AUTO_INCREMENT для таблицы `favourites`
 --
 ALTER TABLE `favourites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `performers`
 --
 ALTER TABLE `performers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `playlists`
@@ -367,12 +344,6 @@ ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT для таблицы `whos`
---
-ALTER TABLE `whos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- Ограничения внешнего ключа сохраненных таблиц
 --
 
@@ -386,14 +357,8 @@ ALTER TABLE `albums`
 -- Ограничения внешнего ключа таблицы `favourites`
 --
 ALTER TABLE `favourites`
-  ADD CONSTRAINT `favourites_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `favourites_ibfk_2` FOREIGN KEY (`trackid`) REFERENCES `tracks` (`id`);
-
---
--- Ограничения внешнего ключа таблицы `performers`
---
-ALTER TABLE `performers`
-  ADD CONSTRAINT `performers_ibfk_1` FOREIGN KEY (`who`) REFERENCES `whos` (`id`);
+  ADD CONSTRAINT `favourites_ibfk_11` FOREIGN KEY (`userid`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `favourites_ibfk_12` FOREIGN KEY (`trackid`) REFERENCES `tracks` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `tracks`
@@ -405,15 +370,15 @@ ALTER TABLE `tracks`
 -- Ограничения внешнего ключа таблицы `track_genres`
 --
 ALTER TABLE `track_genres`
-  ADD CONSTRAINT `track_genres_ibfk_1` FOREIGN KEY (`trackId`) REFERENCES `tracks` (`id`),
-  ADD CONSTRAINT `track_genres_ibfk_2` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`);
+  ADD CONSTRAINT `track_genres_ibfk_10` FOREIGN KEY (`genreId`) REFERENCES `genres` (`id`),
+  ADD CONSTRAINT `track_genres_ibfk_9` FOREIGN KEY (`trackId`) REFERENCES `tracks` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `track_playlists`
 --
 ALTER TABLE `track_playlists`
-  ADD CONSTRAINT `track_playlists_ibfk_1` FOREIGN KEY (`trackId`) REFERENCES `tracks` (`id`),
-  ADD CONSTRAINT `track_playlists_ibfk_2` FOREIGN KEY (`playlistId`) REFERENCES `playlists` (`id`);
+  ADD CONSTRAINT `track_playlists_ibfk_10` FOREIGN KEY (`playlistId`) REFERENCES `playlists` (`id`),
+  ADD CONSTRAINT `track_playlists_ibfk_9` FOREIGN KEY (`trackId`) REFERENCES `tracks` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

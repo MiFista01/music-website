@@ -9,15 +9,24 @@ const Track = require("./models/Track")
 const TrackPlayList = require("./models/Track_PlayList")
 const PlayList = require("./models/PlayList")
 const User = require("./models/User")
-const Who = require("./models/Who")
 // db.sync({alter:true})
+
 
 let bcrypt = require("bcrypt")
 var express = require("express"); 
 var app = express();
-const uuid = require('uuid').v4  
+var fs = require('fs');
 
-
+var multer = require("multer");
+var storage = multer.diskStorage({
+    destination: function(req, file, callback){
+        callback(null, './public/imgs/uploads'); // set the destination
+    },
+    filename: function(req, file, callback){
+        callback(null, Date.now() + '.jpg'); // set the file name and extension
+    }
+});
+var upload = multer({storage: storage});
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -26,7 +35,6 @@ const oneDay = 1000 * 60 * 60 * 12;
 
 //session middleware
 app.use(sessions({
-    
     secret: "marsel",
     saveUninitialized:true,
     resave: false
@@ -56,7 +64,7 @@ User.findOne({where:{nick:"admin"}}).then(async (result) => {
 
 app.get('/', async function(req, res){ 
     let hits = []
-    let tracks = await Track.findAll({orders:"DESC", limit:10})
+    let tracks = await Track.findAll({orders:"DESC", limit:7})
     for (i of tracks){
         let music = {}
         music.track = i;
@@ -177,6 +185,14 @@ app.get('/album/:id', async function(req, res){
         }else{
             admin = false
         }
+        for(let i of tracks){
+            let favorites = await Favourites.findOne({where:{trackId:i.id, userId:req.session.userId}})
+            if (favorites == null){
+                i.fav = "off"
+            }else{
+                i.fav = "on"
+            }
+        }
     }
     res.render('pages/album',{author: req.session.author, genres, user, admin, tracks, album,performer, search:"no page"});
 })
@@ -191,7 +207,7 @@ app.get('/playlist/:id', async function(req, res){
     for (let i of tracks){
         let album = await Album.findOne({where:{id:i.id}})
         let performer = await Performer.findOne({where:{id:album.performerId}})
-        i.performer = performer
+        i.performer = performer.name
     }
     let genres = await Genre.findAll()
     let user
@@ -203,6 +219,14 @@ app.get('/playlist/:id', async function(req, res){
         }else{
             admin = false
         }
+        for(let i of tracks){
+            let favorites = await Favourites.findOne({where:{trackId:i.id, userId:req.session.userId}})
+            if (favorites == null){
+                i.fav = "off"
+            }else{
+                i.fav = "on"
+            }
+        } 
     }
     res.render('pages/playlist',{author: req.session.author, genres,tracks, playlist, user, admin, search:"no page"});
 })
@@ -258,6 +282,224 @@ app.post('/change_profile', async function(req, res){
         res.send({status:0})
     }
     
+})
+app.get('/manager_performer', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            let performers = await Performer.findAll()
+            res.render('pages/performer',{author: req.session.author, genres, performers, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_performer', async function(req, res){ 
+    if(req.body.form == "add"){
+        res.render('fragments/add_performer')
+    }else{
+        if(req.body.form == "update"){
+            let performer = await Performer.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_performer',{performer})
+        }
+    }
+})
+app.post('/performer_add', async function(req, res){
+    try {
+        let dir_exist = fs.existsSync("./public/music/"+req.body.name.split(" ")[0].toLowerCase())
+        let dir_exist_imgs = fs.existsSync("./public/imgs/"+req.body.name.split(" ")[0].toLowerCase())
+        let data = req.body
+        data.directory = req.body.name.split(" ")[0].toLowerCase()
+        let performer = await Performer.create(data)
+        if(!dir_exist){
+            fs.mkdirSync("./public/music/"+req.body.name.split(" ")[0].toLowerCase());
+        }
+        if(!dir_exist_imgs){
+            fs.mkdirSync("./public/imgs/"+req.body.name.split(" ")[0].toLowerCase());
+        }
+        res.send({status:1})
+    } catch (error) {
+        res.send({status:0})
+    }
+    
+
+})
+app.post('/performer_update', async function(req, res){ 
+    let performer = await Performer.findOne({where:{id:req.body.id}})
+    if(performer != null){
+        delete req.body.id
+        performer.update(req.body)
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/performer_remove', async function(req, res){ 
+    let performer = await Performer.findOne({where:{id:req.body.id}})
+    if(performer != null){
+        await performer.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.get('/manager_genres', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            res.render('pages/genre_manager',{author: req.session.author, genres, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_genre', async function(req, res){ 
+    if(req.body.form == "add"){
+        res.render('fragments/add_genre')
+    }else{
+        if(req.body.form == "update"){
+            let genre = await Genre.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_genre',{genre})
+        }
+    }
+})
+app.post('/genre_add', async function(req, res){
+    try {
+        let genre = await Genre.create({title:req.body.title.toUpperCase()})
+        res.send({status:1})
+    } catch (error) {
+        res.send({status:0})
+    }
+    
+
+})
+app.post('/genre_update', async function(req, res){ 
+    let genre = await Genre.findOne({where:{id:req.body.id}})
+    if(genre != null){
+        genre.update({title:req.body.title.toUpperCase()})
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/genre_remove', async function(req, res){ 
+    let genre = await Genre.findOne({where:{id:req.body.id}})
+    if(genre != null){
+        await genre.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+
+
+
+
+
+app.get('/manager_albums', async function(req, res){
+    let admin
+    let user
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+            let genres = await Genre.findAll()
+            let albums = await Album.findAll()
+            res.render('pages/album_manager',{author: req.session.author, genres, albums, user, admin, search:"no page"});
+        }else{
+            res.redirect("/")
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+app.post('/get_form_album', async function(req, res){ 
+    let performers = await Performer.findAll()
+    if(req.body.form == "add"){
+        res.render('fragments/add_album',{performers})
+    }else{
+        if(req.body.form == "update"){
+            let album = await Album.findOne({where:{id:req.body.id}})
+            res.render('fragments/update_album',{album, performers})
+        }
+    }
+})
+app.post('/album_add', upload.single('img'), async function(req, res){
+    // try {
+        console.log(req.body)
+        let performer = Performer.findOne({where:{name:req.body.performer}})
+
+        // if(performer != null){
+        //     var form = new formidable.IncomingForm();
+        //     form.parse(req, function (err, fields, files) {
+        //         // oldpath : temporary folder to which file is saved to
+        //         var oldpath = files.filetoupload.path;
+    
+        //         var newpath = "./imgs/albums" + files.filetoupload.name;
+        //         // copy the file to a new location
+    
+        //         fs.rename(oldpath, newpath, function (err) {
+        //             if (err) throw err;
+        //             // you may respond with another html page
+        //             res.write('File uploaded and moved!');
+        //             res.end();
+        //         });
+        //     });
+        // }
+        
+    //     res.send({status:1})
+    // } catch (error) {
+    //     res.send({status:0})
+    // }
+    
+
+})
+app.post('/album_update', async function(req, res){ 
+    let album = await Album.findOne({where:{id:req.body.id}})
+    if(album != null){
+        delete req.body.id
+        album.update(req.body)
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+app.post('/genre_remove', async function(req, res){ 
+    let album = await Album.findOne({where:{id:req.body.id}})
+    if(album != null){
+        await album.destroy()
+        res.send({status:1})
+    }else{
+        res.send({status:0})
+    }
+})
+
+
+
+
+
+
+
+
+app.post('/add_fav', async function(req, res){ 
+    let favorites = await Favourites.create({trackid:req.body.id, userid:req.session.userId})
+    res.send({status:1})
+})
+app.post('/remove_fav', async function(req, res){ 
+    let favorites = await Favourites.destroy({where:{trackid:req.body.id, userid:req.session.userId}})
+    res.send({status:1}) 
 })
 app.get('/session/destroy', async function(req, res){
     req.session.destroy();
