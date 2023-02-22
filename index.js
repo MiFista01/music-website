@@ -19,10 +19,12 @@ var fs = require('fs');
 const path = require('path');
 var multer = require("multer");
 const img_storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: async(req, file, cb) => {
       // '/files' это директория в которую будут сохранятся файлы 
       if(req.url != "/playlist_add"){
-        cb(null, 'public/imgs/albums/'+req.body.performer.split(" ")[0].toLowerCase())
+        console.log(req.body)
+        let performer = await Performer.findOne({where:{name:req.body.performer}})
+        cb(null, 'public/imgs/albums/'+performer.directory)
       }
       else{
         cb(null, 'public/imgs/playlists')
@@ -112,7 +114,51 @@ app.get('/', async function(req, res){
             admin = false
         }
     }
-    res.render('pages/index',{author: req.session.author, year, hits, playlists, genres, user, admin, search:"page"});
+    res.render('pages/index',{author: req.session.author, year, hits, playlists, genres, on_search:true, user, admin, search:"page"});
+})
+app.get('/all_albums', async function(req, res){ 
+    let obj = await Album.findAll()
+    for(let i of obj){
+        let performer = await Performer.findOne({where:{id:i.performerId}})
+        i.performer = performer.name
+    }
+    let genres = await Genre.findAll()
+    let user
+    let admin
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+    }
+    console.log(obj)
+    res.render('pages/all_albums',{author: req.session.author, year, obj, genres, user, admin, on_search:true, type:"albums", search:"no page"});
+})
+app.post('/search_albums', async function(req, res){ 
+    let albums = await Album.findAll({where:{title:{[Op.substring]:req.body.album}}})
+    console.log(albums)
+    res.render("fragments/search_albums",{albums})
+})
+app.get('/all_playlists', async function(req, res){ 
+    let obj = await PlayList.findAll()
+    let genres = await Genre.findAll()
+    let user
+    let admin
+    if(req.session.userId != undefined){
+        user = await User.findOne({where:{id:req.session.userId}})
+        if (user.nick == "admin"){
+            admin = true
+        }else{
+            admin = false
+        }
+    }
+    res.render('pages/all_playlists',{author: req.session.author, year, obj, genres, user, admin, on_search:true, type:"playlist", search:"no page"});
+})
+app.post('/search_playlists', async function(req, res){ 
+    let playlist = await PlayList.findAll({where:{title:{[Op.substring]:req.body.playlist}}})
+    res.render("fragments/search_playlists",{playlist})
 })
 app.get('/genre/:title', async function(req, res){
     let genre = await Genre.findOne({where:{title:req.params.title}})
@@ -138,7 +184,7 @@ app.get('/genre/:title', async function(req, res){
             admin = false
         }
     }
-    res.render('pages/genre',{author: req.session.author, genres, genre:req.params.title, albums, user, admin, search:"no page"});
+    res.render('pages/genre',{author: req.session.author, genres, genre:req.params.title, albums, on_search:false, user, admin, search:"no page"});
 })
 app.get('/profile/:nick', async function(req, res){
     let user
@@ -153,7 +199,7 @@ app.get('/profile/:nick', async function(req, res){
             admin = false
         }
         if (req.params.nick == user.nick){
-            res.render('pages/profile',{author: req.session.author, genres, user, admin, search:"no page"});
+            res.render('pages/profile',{author: req.session.author, genres, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -188,14 +234,13 @@ app.get('/:nick/favorites', async function(req, res){
                 music.img = await Album.findOne({where:{id:i.albumId}})
                 favorites_tracks.push(music)
             }
-            res.render('pages/favorites',{author: req.session.author, genres, user, admin, favorites_tracks, search:"no page"});
+            res.render('pages/favorites',{author: req.session.author, genres, user, admin, favorites_tracks, on_search:false,  search:"no page"});
         }else{
             res.redirect("/")
         }
     }else{
         res.redirect("/")
     }
-    
 })
 app.get('/album/:id', async function(req, res){
     let tracks = await Track.findAll({where:{albumId:req.params.id}})
@@ -220,18 +265,18 @@ app.get('/album/:id', async function(req, res){
             }
         }
     }
-    res.render('pages/album',{author: req.session.author, genres, user, admin, tracks, album,performer, search:"no page"});
+    res.render('pages/album',{author: req.session.author, genres, user, on_search:false, admin, tracks, album, performer, search:"no page"});
 })
 app.get('/playlist/:id', async function(req, res){
     let playlist = await PlayList.findOne({where:{id:req.params.id}})
     let tracksIds = []
-    let tarcks_palylist = await TrackPlayList.findAll({where:{playlistId:req.params.id}})
-    for(let i of tarcks_palylist){
-        tracksIds.push(i.id)
+    let tracks_playlist = await TrackPlayList.findAll({where:{playlistId:req.params.id}})
+    for(let i of tracks_playlist){
+        tracksIds.push(i.trackId)
     }
     let tracks = await Track.findAll({where:{id:tracksIds}})
     for (let i of tracks){
-        let album = await Album.findOne({where:{id:i.id}})
+        let album = await Album.findOne({where:{id:i.albumId}})
         let performer = await Performer.findOne({where:{id:album.performerId}})
         i.performer = performer.name
     }
@@ -254,7 +299,7 @@ app.get('/playlist/:id', async function(req, res){
             }
         } 
     }
-    res.render('pages/playlist',{author: req.session.author, genres,tracks, playlist, user, admin, search:"no page"});
+    res.render('pages/playlist',{author: req.session.author, genres, tracks, playlist, user, on_search:false, admin, search:"no page"});
 })
 app.post('/login', async function(req, res){
     let user = await User.findOne({where:{nick:req.body.nick}})
@@ -318,7 +363,7 @@ app.get('/manager_performer', async function(req, res){
             admin = true
             let genres = await Genre.findAll()
             let performers = await Performer.findAll()
-            res.render('pages/performer',{author: req.session.author, genres, performers, user, admin, search:"no page"});
+            res.render('pages/performer',{author: req.session.author, genres, performers, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -384,7 +429,7 @@ app.get('/manager_genres', async function(req, res){
         if (user.nick == "admin"){
             admin = true
             let genres = await Genre.findAll()
-            res.render('pages/genre_manager',{author: req.session.author, genres, user, admin, search:"no page"});
+            res.render('pages/genre_manager',{author: req.session.author, genres, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -439,7 +484,7 @@ app.get('/manager_albums', async function(req, res){
             admin = true
             let genres = await Genre.findAll()
             let albums = await Album.findAll()
-            res.render('pages/album_manager',{author: req.session.author, genres, albums, user, admin, search:"no page"});
+            res.render('pages/album_manager',{author: req.session.author, genres, albums, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -502,7 +547,7 @@ app.get('/manager_playlist', async function(req, res){
             admin = true
             let genres = await Genre.findAll()
             let playlists = await PlayList.findAll()
-            res.render('pages/playlist_manager',{author: req.session.author, genres, playlists, user, admin, search:"no page"});
+            res.render('pages/playlist_manager',{author: req.session.author, genres, playlists, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -566,7 +611,7 @@ app.get('/manager_track', async function(req, res){
                 let album =  await Album.findOne({where:{id:i.albumId}})
                 i.img = album.img
             }
-            res.render('pages/track_manager',{author: req.session.author, genres, tracks, albums, user, admin, search:"no page"});
+            res.render('pages/track_manager',{author: req.session.author, genres, tracks, albums, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -576,8 +621,9 @@ app.get('/manager_track', async function(req, res){
 })
 app.post('/get_form_track', async function(req, res){ 
     let albums = await Album.findAll()
+    let genres = await Genre.findAll()
     if(req.body.form == "add"){
-        res.render('fragments/add_track',{albums})
+        res.render('fragments/add_track',{albums, genres})
     }else{
         if(req.body.form == "update"){
             let track = await Track.findOne({where:{id:req.body.id}})
@@ -587,9 +633,13 @@ app.post('/get_form_track', async function(req, res){
 })
 app.post('/track_add',music_upload.single("music") ,[] , async function(req, res){
     try {
-        let album = await Album.findOne({here:{title:req.body.album}})
+        let album = await Album.findOne({where:{title:req.body.album}})
+        console.log(album)
+        console.log(req.body.album)
         if(req.file != undefined && album != null){
             let track = await Track.create({title:req.body.title, link:req.file.destination.replace("public/", "")+"/"+req.file.filename, albumId:album.id})
+            let genre = await Genre.findOrCreate({where:{title:req.body.genre}, defaults:{title:req.body.genre}})
+            TrackGenre.create({trackId:track.id, genreId:genre[0].id})
             res.send({status:1})
         }else{
             res.send({status:0,text:"non-existent music file"})
@@ -633,10 +683,6 @@ app.post('/search_tracks', async function(req, res){
     const array = Array.from(unq_tracks)
     res.render("fragments/render_tracks_admin",{array})
 })
-
-
-
-
 app.get('/manager_tracks_playlist', async function(req, res){
     let admin
     let user
@@ -652,7 +698,7 @@ app.get('/manager_tracks_playlist', async function(req, res){
                 let album =  await Album.findOne({where:{id:i.albumId}})
                 i.img = album.img
             }
-            res.render('pages/tracks_playlist_manager',{author: req.session.author, genres, tracks, albums, playlists, user, admin, search:"no page"});
+            res.render('pages/tracks_playlist_manager',{author: req.session.author, genres, tracks, albums, playlists, user, on_search:false, admin, search:"no page"});
         }else{
             res.redirect("/")
         }
@@ -660,66 +706,39 @@ app.get('/manager_tracks_playlist', async function(req, res){
         res.redirect("/")
     }
 })
-app.post('/get_form_track', async function(req, res){ 
-    let albums = await Album.findAll()
-    if(req.body.form == "add"){
-        res.render('fragments/add_track',{albums})
-    }else{
-        if(req.body.form == "update"){
-            let track = await Track.findOne({where:{id:req.body.id}})
-            res.render('fragments/update_track',{track,albums})
+app.post('/search_playlist', async function(req, res){ 
+    let playlist = await PlayList.findOne({where:{title:req.body.title}})
+    if (playlist != null){
+        let tracks_playlist = await TrackPlayList.findAll({where:{playlistId:playlist.id}})
+        let tracksIds = []
+        for(let i of tracks_playlist){
+            tracksIds.push(i.trackId)
+        }
+        let tracks = await Track.findAll({where:{id:tracksIds}})
+        let data = []
+        for(let i of tracks){
+            let album = await Album.findOne({where:{id:i.albumId}})
+            i.dataValues.img = album.img
+        }
+        res.send({playlist, tracks})
+    }
+})
+app.post('/update_playlist', async function(req, res){ 
+    let playlist = await PlayList.findOne({where:{title:req.body.title}})
+    let tracks_playlist = await TrackPlayList.findAll({where:{playlistId:playlist.id}})
+    for(let i of tracks_playlist){
+        let track = await Track.findOne({where:{id:i.trackId}})
+        if(!req.body.data.includes(track.title)){
+            i.destroy()
+        }
+    }
+    for(let i of req.body.data){
+        let track = await Track.findOne({where:{title:i}})
+        if(track != null){
+            await TrackPlayList.findOrCreate({where: {trackId: track.id, playlistId:playlist.id}, defaults: {trackId: track.id, playlistId:playlist.id}})
         }
     }
 })
-app.post('/track_add',music_upload.single("music") ,[] , async function(req, res){
-    try {
-        let album = await Album.findOne({here:{title:req.body.album}})
-        if(req.file != undefined && album != null){
-            let track = await Track.create({title:req.body.title, link:req.file.destination.replace("public/", "")+"/"+req.file.filename, albumId:album.id})
-            res.send({status:1})
-        }else{
-            res.send({status:0,text:"non-existent music file"})
-        }
-    } catch (error) {
-        res.send({status:0})
-    }
-})
-app.post('/track_update',music_upload.single("music") ,[] , async function(req, res){ 
-    let track = await Track.findOne({where:{id:req.body.id}})
-    if(track != null){ 
-        let data = {}
-        data.title = req.body.title
-        let album = await Album.findOne({where:{title:req.body.album}})
-        data.albumId = album.id
-        track.update(data)
-        res.send({status:1})
-    }else{
-        res.send({status:0})
-    }
-})
-app.post('/tarck_remove', async function(req, res){ 
-    let track = await Track.findOne({where:{id:req.body.id}})
-    if(track != null){
-        await track.destroy()
-        res.send({status:1})
-    }else{
-        res.send({status:0})
-    }
-})
-app.post('/search_tracks', async function(req, res){ 
-    let unq_tracks = new Set();
-    let albums = await Album.findAll({where:{title:{[Op.substring]:req.body.name}}})
-    for(let i of albums){
-        let tracks = await Track.findAll({where:{albumId:i.id}})
-        for(let j of tracks){
-            j.img = i.img
-            unq_tracks.add(j)
-        }
-    }
-    const array = Array.from(unq_tracks)
-    res.render("fragments/render_tracks_admin",{array})
-})
-
 
 
 app.post('/add_fav', async function(req, res){ 
@@ -744,6 +763,6 @@ app.all('*', async function(req, res){
             admin = false
         }
     }
-    res.render('pages/error',{admin});
+    res.render('pages/error',{admin, on_search:false,});
 })
 app.listen(3000); 

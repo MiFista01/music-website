@@ -10,19 +10,23 @@
         <% }) %>
     </div>
 </div>
-<div class="search">
-    <% if (search == "page") { %>
-        <a href="/search" class="big_ft">SEARCH</a>
-    <% } %>
-    <% if (search == "no page") { %>
-        <form id="search_albums">
-            <input type="text" placeholder="Album search by artist" autocomplete="off">
-            <datalist>
-                
-            </datalist>
-        </form>
-    <% } %>
-</div>
+<% if (on_search) { %>
+    <div class="search">
+        <% if (search == "page") { %>
+            <a href="/all_albums" class="big_ft">SEARCH</a>
+        <% } %>
+        <% if (search == "no page") { %>
+            <form id="search_<%= type %>" class="form">
+                <input type="text" placeholder="Album search by artist" autocomplete="off" list="objs" name="obj">
+                <datalist id="objs">
+                    <% obj.forEach(element => { %>
+                     <option value="<%= element.title %>"></option>
+                    <% }) %>
+                </datalist>
+            </form>
+        <% } %>
+    </div>
+<% } %>
 <% if (!author) { %>
     <div class="sign">
         <p class="list large_ft">SIGN</p>

@@ -1,6 +1,12 @@
 <form id="add_row" method="post" enctype="multipart/form-data">
     <h2 class="large_ft">Add tarck</h2>
     <input type="text" name="title" placeholder="Name" autocomplete="off" required >
+    <input type="text" name="genre" list="genres" placeholder="Genre name" autocomplete="off" required>
+    <datalist id="genres">
+        <% genres.forEach(element => { %>
+            <option value="<%= element.title%>"></option>
+        <% }) %>
+    </datalist>
     <input type="text" name="album" list="albums" placeholder="Album name" autocomplete="off" required>
     <datalist id="albums">
         <% albums.forEach(element => { %>

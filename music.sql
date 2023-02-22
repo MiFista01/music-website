@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Фев 21 2023 г., 03:20
+-- Время создания: Фев 22 2023 г., 01:21
 -- Версия сервера: 10.4.25-MariaDB
 -- Версия PHP: 8.1.10
 
@@ -41,10 +41,12 @@ CREATE TABLE `albums` (
 --
 
 INSERT INTO `albums` (`id`, `title`, `performerId`, `year`, `count_clicks`, `img`) VALUES
-(1, 'Panic', 1, 2017, NULL, 'imgs/albums/ashes/panic.jpeg'),
-(2, 'Elements', 2, 2012, NULL, 'imgs/albums/cult/elements.jpg'),
+(1, 'Panicc', 1, 2017, NULL, 'imgs/albums/ashes/panic.jpeg'),
+(2, 'Elementssss', 2, 2012, NULL, 'imgs/albums/cult/elements.jpg'),
 (3, 'Speed', 3, 2020, NULL, 'imgs/albums/raizer/speed.jpg'),
-(4, 'Starlight', 4, 2019, NULL, 'imgs/albums/starset/starlight.jpg');
+(4, 'Starlight', 4, 2019, NULL, 'imgs/albums/starset/starlight.jpg'),
+(6, 'anniversary', 9, 2011, NULL, 'imgs/albums/celldweller/celldewer_anniversary.jpg'),
+(7, 'Sream', 8, 2018, NULL, 'imgs/albums/miatris/sream.jpg');
 
 -- --------------------------------------------------------
 
@@ -85,7 +87,8 @@ CREATE TABLE `genres` (
 
 INSERT INTO `genres` (`id`, `title`) VALUES
 (1, 'ROCKSSS'),
-(2, 'ELECTRONIC');
+(2, 'ELECTRONIC'),
+(4, 'POP');
 
 -- --------------------------------------------------------
 
@@ -109,7 +112,9 @@ INSERT INTO `performers` (`id`, `name`, `year`, `des`, `directory`) VALUES
 (1, 'Ashes', 2012, 'Ash are a Northern Irish rock band formed in Downpatrick in 1992 by vocalist and guitarist Tim Wheeler, bassist Mark Hamilton and drummer Rick McMurray. As a three-piece, they released mini-album Trailer in 1994 and full-length album 1977 in 1996. This 1996 release was named by NME as one of the 500 greatest albums of all time.[8] After the success of their full debut the band recruited Charlotte Hatherley as a guitarist and vocalist, releasing their second record Nu-Clear Sounds in 1998. After narrowly avoiding bankruptcy, the band released Free All Angels in 2001 and a string of successful singles.', 'ashes'),
 (2, 'Cult', 2012, 'Cult to Follow is the new project of former The Union Underground singer Bryan Scott. The band has toured with Three Days Grace, Flyleaf, Theory Of A Deadman, The Exies, Sick Puppies, just to name of a few. They have a album slated for release in March of 2012!!', 'cult'),
 (3, 'Raizer', 2005, ' onipq w4rpo qf ap oiewq poi  eq[poi erw[po frqgapoij fe ihufaeihu fwqg pjo ega o; ijoga ', 'raizer'),
-(4, 'Starset', 2011, '[poad s[p da [op fdsa pok  lkjfds lij fds  lifsdfoij dfsaiou fd sahoi fd safdsa oiha uh fdsa    ojfis', 'starset');
+(4, 'Starset', 2011, '[poad s[p da [op fdsa pok  lkjfds lij fds  lifsdfoij dfsaiou fd sahoi fd safdsa oiha uh fdsa    ojfis', 'starset'),
+(8, 'miatriss', 2015, ' ', 'miatris'),
+(9, 'Celldweller', 2010, '', 'celldweller');
 
 -- --------------------------------------------------------
 
@@ -128,7 +133,8 @@ CREATE TABLE `playlists` (
 --
 
 INSERT INTO `playlists` (`id`, `title`, `img`) VALUES
-(1, 'ROCK', 'imgs/playlists/rock.jpg');
+(1, 'ROCK', 'imgs/playlists/rock.jpg'),
+(2, 'Pop electro', 'imgs/playlists/pop_electro.jpg');
 
 -- --------------------------------------------------------
 
@@ -152,7 +158,9 @@ INSERT INTO `tracks` (`id`, `title`, `link`, `albumId`, `count`) VALUES
 (1, 'White', 'music/ashes/ashes.mp3', 1, NULL),
 (2, 'Pan', 'music/cult/cult.mp3', 2, NULL),
 (3, 'Speed', 'music/raizer/raizer_speed.mp3', 3, NULL),
-(4, 'Starlight', 'music/starset/starset_starlight.mp3', 4, NULL);
+(4, 'Starlight', 'music/starset/starset_starlight.mp3', 4, NULL),
+(5, 'Ann', 'music/celldweller/celldewer.mp3', 6, NULL),
+(18, 'Sream', 'music/miatris/miatriss_scream.mp3', 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -174,7 +182,8 @@ INSERT INTO `track_genres` (`id`, `trackId`, `genreId`) VALUES
 (1, 1, 1),
 (2, 2, 1),
 (3, 3, 1),
-(4, 4, 1);
+(4, 4, 1),
+(8, 18, 2);
 
 -- --------------------------------------------------------
 
@@ -194,9 +203,12 @@ CREATE TABLE `track_playlists` (
 
 INSERT INTO `track_playlists` (`id`, `trackId`, `playlistId`) VALUES
 (1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 4, 1);
+(5, 3, 1),
+(6, 4, 1),
+(7, 5, 1),
+(8, 2, 1),
+(9, 2, 2),
+(10, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -217,7 +229,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `nick`, `password`, `salt`) VALUES
 (1, 'admin', '$2b$10$XV21URkha1FSBkyTQ0gweusF6e4pbq/T3LmjzQtOu5vYrlFU.60jy', '$2b$10$XV21URkha1FSBkyTQ0gweu'),
-(2, 'mifista', '$2b$10$ixOGLnWac38QJrJTmOYFe.KK8vIRhOMECHMI.VxbMRv7RJ6g9qxTy', '$2b$10$ixOGLnWac38QJrJTmOYFe.');
+(2, 'mifista', '$2b$10$ixOGLnWac38QJrJTmOYFe.KK8vIRhOMECHMI.VxbMRv7RJ6g9qxTy', '$2b$10$ixOGLnWac38QJrJTmOYFe.'),
+(3, 'mifis', '$2b$10$EkU8v0j0rC5UfIaXUJyYEusYUrIwdAbcCGbM7hWpc95NIGNyPf076', '$2b$10$EkU8v0j0rC5UfIaXUJyYEu');
 
 --
 -- Индексы сохранённых таблиц
@@ -293,7 +306,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `albums`
 --
 ALTER TABLE `albums`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `favourites`
@@ -305,43 +318,43 @@ ALTER TABLE `favourites`
 -- AUTO_INCREMENT для таблицы `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `performers`
 --
 ALTER TABLE `performers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `playlists`
 --
 ALTER TABLE `playlists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `tracks`
 --
 ALTER TABLE `tracks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT для таблицы `track_genres`
 --
 ALTER TABLE `track_genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `track_playlists`
 --
 ALTER TABLE `track_playlists`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

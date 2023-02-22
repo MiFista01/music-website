@@ -303,6 +303,10 @@ main{
 }
 .album_list .header{
     width: 50%;
+    position: sticky;
+    height: min-content;
+    left: 0;
+    top: 0;
 }
 .album_list .header p{
     color: white;
@@ -376,7 +380,7 @@ main{
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    max-height: 70vh;
+    height: 60vh;
     color: black;
 }
 .manager .create_form{
@@ -514,8 +518,23 @@ main{
     margin: 0;
     margin-bottom: 10px;
 }
+.manager .update img{
+    width: 30%;
+}
+.manager .create_form .tracks{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    overflow-y: scroll;
+    height: 28vh;
+    width: 100%;
+}
 .manager .create_form .tracks div{
     cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}.manager .create_form .tracks div img{
     width: 30%;
 }
 .manager .create_form .tracks div:hover{

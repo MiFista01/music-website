@@ -1,0 +1,14 @@
+<div class="conteiner column">
+    <div class="header between">
+        <a href="all_playlists" class="big_ft"><h2>MUZLO PlayList</h2></a>
+        <a href="all_playlists" class="bold middle_ft">Show all</a>
+    </div>
+    <div class="row">
+        <% playlist.forEach(element => { %>
+            <div>
+                <a href="playlist/<%=element.id%>"><img src="<%= element.img %>" alt=""></a>
+                <h3 class="small_ft"><%=  element.title %></h3>
+            </div>
+        <% }) %>
+    </div>
+</div>

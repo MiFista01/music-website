@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    if(location.pathname.split('/')[1] != "" && location.pathname.split('/')[1] != "genre"){
-        $(".search").remove();
-    }
     $(".user ul").hide(0);
     $(".icon img").click(function (e) { 
         e.preventDefault();

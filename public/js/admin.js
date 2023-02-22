@@ -80,6 +80,62 @@ $(document).ready(function () {
             }
         });
     });
+    $("#tracks_playlist").submit(function (e) { 
+        e.preventDefault();
+        let form = this
+        $.ajax({
+            type: "post",
+            url: "/search_playlist",
+            data: {title:form.playlist.value},
+            dataType: "json",
+            success: function (response) {
+                if(response){
+                    $("#playlist_name").val(response.playlist.title);
+                    $(".tracks").empty();
+                    for(let i of response.tracks){
+                        let div = document.createElement("div")
+                        remove(div)
+                        let input = document.createElement("input")
+                        input.type = "checkbox"
+                        input.checked = true
+                        input.name = "track"
+                        input.value = i.title
+                        input.style.display = "none"
+                        let img = document.createElement("img")
+                        img.src = "../../"+i.img;
+                        div.appendChild(img)
+                        let lable = document.createElement("label")
+                        lable.textContent = i.title
+                        lable.className = "middle_ft"
+                        div.appendChild(input)
+                        div.appendChild(lable)
+                        $(".tracks").append(div);
+                    }
+                }
+            }
+        });
+    });
+    $("#update_playlist").submit(function (e) { 
+        e.preventDefault();
+        let data = []
+        let form = this
+        $("input:checkbox[name=track]:checked").each(function() {
+            data.push($(this).val());
+        });
+        $.ajax({
+            type: "post",
+            url: "/update_playlist",
+            data: {data, title:form.title.value},
+            dataType: "json",
+            success: function (response) {
+                if(response.status == 1){
+                    $(".error_text").text("Updated");
+                }else{
+                    $(".error_text").text("Error");
+                }
+            }
+        });
+    });
 });
 function update(obj) {
     $(obj).click(function (e) { 
@@ -137,28 +193,13 @@ function update(obj) {
             }
         });
     });
-    $("#update_playlist").submit(function (e) { 
-        e.preventDefault();
-        let data = []
-        $("input:checkbox[name=track]:checked").each(function() {
-            data.push($(this).val());
-        });
-        $.ajax({
-            type: "post",
-            url: "/update_playlist",
-            data: {data},
-            dataType: "dataType",
-            success: function (response) {
-                
-            }
-        });
-    });
 }
 function add(obj){
     $(obj).click(function (e) { 
         e.preventDefault();
         let btn = this
         let div = document.createElement("div")
+        console.log($(btn).find(".text").text())
         remove(div)
         let input = document.createElement("input")
         input.type = "checkbox"
@@ -166,6 +207,9 @@ function add(obj){
         input.name = "track"
         input.value = $(btn).find(".text").text()
         input.style.display = "none"
+        let img = document.createElement("img")
+        img.src = $($(btn).find("img")).attr("src");;
+        div.appendChild(img)
         let lable = document.createElement("label")
         lable.textContent = $(btn).find(".text").text()
         lable.className = "middle_ft"

@@ -1,0 +1,14 @@
+<div class="conteiner column">
+    <div class="header between">
+        <a href="all_albums" class="big_ft"><h2>All albums</h2></a>
+        <a href="all_albums" class="bold middle_ft">Show all</a>
+    </div>
+    <div class="row">
+        <% albums.forEach(element => { %>
+            <div>
+                <a href="album/<%=element.id%>"><img src="<%= element.img %>" alt=""></a>
+                <h3 class="small_ft"><%=  element.performer %></h3>
+            </div>
+        <% }) %>
+    </div>
+</div>

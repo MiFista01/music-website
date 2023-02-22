@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header id="up">
+                <%- include('../partials/header'); %>
+            </header>
+            <main>
+                <div class="conteiner column">
+                    <div class="header between">
+                        <a href="all_playlists" class="big_ft"><h2>MUZLO PlayList</h2></a>
+                        <a href="all_playlists" class="bold middle_ft">Show all</a>
+                    </div>
+                    <div class="row">
+                        <% obj.forEach(element => { %>
+                            <div>
+                                <a href="playlist/<%=element.id%>"><img src="<%= element.img %>" alt=""></a>
+                                <h3 class="small_ft"><%=  element.title %></h3>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
+    </body>
+</html>
